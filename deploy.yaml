@@ -15,17 +15,14 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: ashishpandey1991/agrobase:latest . # Include tag for clarity
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        # -----------------------------------------------------------------
-        # HEALTH PROBES REMOVED (Fixes the 0/1 READY issue)
-        # -----------------------------------------------------------------
+        - name: nginx
+          image: ashishpandey1991/agrobase:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
