@@ -1,49 +1,36 @@
 # ---------- Stage 1: Build the React app ----------
-FROM node:18 AS build
+# Using alpine version of node to save space during build
+FROM node:18-alpine AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files and install deps
+# Only copy package files first to leverage Docker cache
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
 COPY . .
-
-# Build the React app
 RUN npm run build
 
+# ---------- Stage 2: Serve with Nginx (Alpine) ----------
+# Nginx Alpine is ~5MB compared to Ubuntu's 70MB+
+FROM nginx:alpine
 
-# ---------- Stage 2: Serve with Apache ----------
-FROM ubuntu:latest
+# Remove default static files
+RUN rm -rf /usr/share/nginx/html/*
 
-# Install Apache
-RUN apt-get update && \
-    apt-get install -y apache2 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Copy React build output to Nginx root
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Fix Apache warning
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+# EXTREMELY IMPORTANT: Support React Router (fixes 404 on refresh)
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html index.htm; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
-# Enable Apache rewrite module (important for React routing)
-RUN a2enmod rewrite
-
-# Copy React build output to Apache root
-COPY --from=build /app/build /var/www/html/
-
-# Configure Apache to support React Router
-RUN printf '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html\n\
-    <Directory /var/www/html>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
-
-# Expose HTTP port
 EXPOSE 80
 
-# Run Apache in foreground
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+CMD ["nginx", "-g", "daemon off;"]
