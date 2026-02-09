@@ -1,0 +1,84 @@
+:root{--accent:#2f8f3f;--muted:#6b7280}
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; padding:0; background:#f7faf7; color:#0f172a }
+.app-root{min-height:100vh; display:flex; flex-direction:column; position:relative; z-index:1}
+.page-container{max-width:1000px; margin:2rem auto; padding:1rem; flex:1; width:100%}
+.site-header{background:white; box-shadow:0 1px 0 rgba(0,0,0,0.06);}
+.nav{display:flex; gap:1rem; align-items:center; padding:0.75rem 1rem}
+.nav a{color:var(--muted); text-decoration:none; padding:0.5rem 0.75rem; border-radius:6px}
+.nav a.active, .nav a:hover{color:var(--accent); background:rgba(47,143,63,0.06)}
+.hero-img{width:100%; max-height:420px; object-fit:cover; border-radius:8px; box-shadow:0 6px 18px rgba(15,23,42,0.08)}
+.card{background:white; padding:1rem; border-radius:8px}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem}
+.form{display:flex; flex-direction:column; gap:0.5rem}
+.form input, .form button, .form textarea{padding:0.6rem; border:1px solid #e6e6e6; border-radius:6px}
+.form button{background:var(--accent); color:white; border:none; cursor:pointer}
+.small{font-size:0.9rem; color:var(--muted)}
+
+/* Auth (signin / signup) styles */
+.auth-wrapper{display:flex; align-items:center; justify-content:center; padding:3rem 1rem}
+.auth-card{width:100%; max-width:460px; background:white; padding:4rem; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.08);}
+.auth-header{display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:1rem}
+.auth-header h1{margin:0; font-size:1.5rem; color:var(--accent)}
+.auth-sub{color:var(--muted); margin-top:6px}
+.auth-form{display:flex; flex-direction:column; gap:0.75rem}
+.auth-input{padding:0.85rem; border:1px solid #e6e6e6; border-radius:8px; font-size:0.98rem}
+.auth-actions{display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-top:0.5rem}
+.auth-cta{background:var(--accent); color:white; border:none; padding:0.85rem 1rem; border-radius:8px; cursor:pointer}
+.auth-secondary{background:transparent; border:1px solid #e6e6e6; padding:0.65rem 0.9rem; border-radius:8px; cursor:pointer}
+.auth-foot{margin-top:0.75rem; text-align:center; color:var(--muted); font-size:0.95rem}
+.password-strength{height:8px; border-radius:6px; background:#eee; overflow:hidden}
+.password-strength > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,#f97316,#16a34a)}
+.error{color:#dc2626; font-size:0.9rem}
+
+
+/* Home page gallery: matrix grid layout */
+.home-title{font-size:2.5rem; margin:0 0 0.5rem}
+/* Arrange gallery into columns with 5 images per column on desktop */
+.home-gallery{display:grid; grid-template-columns: repeat(5, 1fr); gap:1rem; align-items:start; position:relative; padding:1.25rem}
+.home-gallery::before{content:""; position:fixed; top:0; left:0; width:100%; height:100%; background-image:url('https://upload.wikimedia.org/wikipedia/commons/1/1a/India_political_map.png'); background-size:50% auto; background-position:center; background-repeat:no-repeat; opacity:0.18; pointer-events:none; z-index:0}
+.home-gallery .card{display:block; padding:0; border-radius:8px; overflow:hidden; background:white; position:relative; z-index:1}
+.home-gallery .card img{width:100%; height:320px; object-fit:cover; display:block}
+.home-gallery .card > div{padding:0.75rem}
+.home-gallery .card h3{margin:0 0 0.5rem; font-size:1.125rem}
+
+@media (max-width: 700px){
+  .home-gallery{grid-template-columns:repeat(3,1fr)}
+}
+
+@media (max-width: 640px){
+  .home-gallery{grid-template-columns:repeat(1,1fr); gap:0.75rem}
+  .home-gallery .card img{height:240px}
+  .home-title{font-size:1.75rem}
+}
+
+/* Footer styles */
+.site-footer{background:#0f172a; color:white; padding:1.25rem 0; position:relative; z-index:2}
+.footer-inner{max-width:1000px; margin:0 auto; display:flex; gap:1rem; align-items:center; justify-content:space-between; padding:0 1rem}
+.footer-brand strong{font-size:1.125rem; color:var(--accent)}
+.footer-contact{margin-top:6px; font-size:0.95rem; color:#cbd5e1}
+.footer-social{display:flex; gap:0.75rem}
+.icon-link{display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; background:rgba(255,255,255,0.06); border-radius:8px; color:white}
+.icon-link svg{width:18px; height:18px}
+
+@media (max-width:640px){
+  .footer-inner{flex-direction:column; align-items:flex-start; gap:0.5rem}
+}
+/* Hero slider */
+.hero-slider{position:relative; height:720px; border-radius:0; overflow:hidden; margin:-5vh auto 10vh; width:100vw; margin-left:-50vw; left:50%}
+.hero-slider .slide{position:absolute; inset:0; background-size:cover; background-position:center; transition:opacity 800ms ease; opacity:0}
+.hero-slider .slide.active{opacity:1}
+.hero-slider .slide-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35)); display:flex; align-items:flex-end}
+.hero-slider .slide-content{color:white; padding:2rem; max-width:100%}
+.hero-slider .slide-title{font-size:2.5rem; margin:0 0 0.5rem}
+.hero-slider .slide-desc{opacity:0.95; font-size:1.1rem}
+
+/* Top title overlay inside the hero slider */
+.hero-top-title{position:absolute; top:12px; left:12px; transform:none; z-index:40; background:rgba(255,255,255,0.92); padding:12px 20px; border-radius:6px; box-shadow:0 6px 20px rgba(2,6,23,0.12); text-align:left;}
+.hero-top-title .home-title{font-size:2.25rem; margin:0; color:var(--accent)}
+.hero-top-title .small{margin:4px 0 0; color:#334155}
+
+@media (max-width: 640px){
+  .hero-slider{height:220px}
+  .hero-slider .slide-title{font-size:1.2rem}
+}
+ 
