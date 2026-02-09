@@ -9,4 +9,4 @@ spec:
   ports:
     - port: 80         # Internal service port
       targetPort: 80   # Container port
-      nodePort: 32000  # External port (must be 30000-32767)
+      nodePort: 5173  # External port (must be 30000-32767)
