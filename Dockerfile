@@ -1,21 +1,49 @@
-# Start from Ubuntu
+# ---------- Stage 1: Build the React app ----------
+FROM node:18 AS build
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and install deps
+COPY package*.json ./
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build the React app
+RUN npm run build
+
+
+# ---------- Stage 2: Serve with Apache ----------
 FROM ubuntu:latest
 
-# Update and install Apache2, and clean up
+# Install Apache
 RUN apt-get update && \
     apt-get install -y apache2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Fix the AH00558 warning by creating a dummy ServerName
-# This is optional but good practice
+# Fix Apache warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Add your HTML content
-ADD index.html /var/www/html/
+# Enable Apache rewrite module (important for React routing)
+RUN a2enmod rewrite
 
-# EXPOSE is optional, but good documentation
+# Copy React build output to Apache root
+COPY --from=build /app/build /var/www/html/
+
+# Configure Apache to support React Router
+RUN printf '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html\n\
+    <Directory /var/www/html>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
+# Expose HTTP port
 EXPOSE 80
 
-# THE CRITICAL FIX: Run Apache in the foreground
+# Run Apache in foreground
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
