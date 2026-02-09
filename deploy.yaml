@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: ashishpandey1991/clock:latest    # Include tag for clarity
+        image: ashishpandey1991/agrobase:latest    # Include tag for clarity
         ports:
         - containerPort: 80
         resources:
