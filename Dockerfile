@@ -1,5 +1,5 @@
 # Start from Ubuntu
-FROM ubuntu: latest
+FROM ubuntu:latest
 
 # Update and install Apache2, and clean up
 RUN apt-get update && \
