@@ -1,5 +1,4 @@
-# ---------- Stage 1: Build the React app ----------
-FROM node:18-alpine AS build
+FROM node:20
 
 WORKDIR /app
 
@@ -9,24 +8,9 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# ---------- Stage 2: Serve with Nginx ----------
-FROM nginx:alpine
+# Use a proper static file server
+RUN npm install -g serve
 
-RUN rm -rf /usr/share/nginx/html/*
+EXPOSE 8080
 
-# CHANGED THIS LINE: Vite outputs to 'dist', not 'build'
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Support React Router
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "dist", "-l", "8080"]
